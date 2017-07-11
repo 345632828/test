@@ -1,0 +1,27 @@
+{% extends "base.html" %} 
+{% block main %}
+
+<div id = 'arr' style="display:none">
+%{arr}
+</div>
+    <div id="app">
+    <ol>
+        <li v-for="site in sites">
+        {{ site.FirstName }}
+        </li>
+    </ol>
+    </div>
+ 
+<script>
+
+new Vue({
+  el: '#app',
+  data: {
+    sites: [%{arr}]
+  }
+})
+var s = '%{title}';
+alert(s);
+</script>
+ 
+{% endblock %}

@@ -13,18 +13,15 @@ var sequelize = new Sequelize(config.database, config.username, config.password,
     }
 });
 
-var Pet = sequelize.define('pet',
+var Pet = sequelize.define('Persons',
  {
-    id: {
+    personID: {
         type: Sequelize.STRING(50),
         primaryKey: true
         },
-    name: Sequelize.STRING(100),
-    gender: Sequelize.BOOLEAN,
-    birth: Sequelize.STRING(10),
-    createdAt: Sequelize.BIGINT,
-    updatedAt: Sequelize.BIGINT,
-    version: Sequelize.BIGINT
+    FirstName: Sequelize.STRING(15),
+    LastName: Sequelize.STRING(15),
+    Age: Sequelize.BIGINT
 }, {
         timestamps: false   
     });
@@ -62,38 +59,46 @@ router.post("/register/:name",async (ctx,next) => {
             password = ctx.request.body.password || '';
         if( email === 'register-ok'){
             ctx.render('register-ok.html', {
-                    title:  email
+                    title:  password,
+                    email: email
             });
         }else{
-            ctx.render('register-no.html', {
-                    title:  email
+
+           
+
+            var dog = await Pet.create({
+                personID: 'd-' + now,
+                FirstName: email,
+                LastName: password,
+                Age:25
             });
+
+             ctx.render('register-no.html', {
+                    title:  password,
+                    email: email
+            });
+
         }
       
       
 })
 
-router.get("/tp/:name",async (ctx,next) => {
+router.get("/vue/:name",async (ctx,next) => {
+    var pets = await Pet.findAll({});
+  
+   
 
-    var pets = await Pet.findAll({
-        where: {
-            name: 'Odie'
-        }
-    });
-
+  var arr = [];
   console.log(`find ${pets.length} pets:`);
-
-  var name =  JSON.stringify(pets[1]);
     for (let p of pets) {
-        console.log(JSON.stringify(p));
-        // name = JSON.stringify(p);
-    }  
-        
-        console.log('index ok!');
-        ctx.render('index.html', {
-                title: name
-        });
-      
+        console.log("JSON.stringify:"+JSON.stringify(p));
+        arr.push(JSON.stringify(p));
+    } 
+
+    ctx.render('vue.html', {
+      title:  "password",
+      arr: arr            
+    });
 })
 
 
